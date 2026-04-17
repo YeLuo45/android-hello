@@ -1,0 +1,16 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+local.properties
+
+# Keystore (DO NOT commit real keystores)
+*.keystore
+*.jks
+
+# Generated APK (use GitHub Releases for distributable APKs)
+app/build/outputs/apk/**/*.apk
