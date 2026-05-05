@@ -114,6 +114,18 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // Testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'io.mockk:mockk:1.13.10'
+    testImplementation 'app.cash.turbine:turbine:1.1.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
 }
 
 kapt {
