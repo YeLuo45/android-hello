@@ -1,37 +1,31 @@
 package com.hello.android
 
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.hello.android.BuildConfig
-import com.hello.android.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import com.hello.android.ui.components.HelloNavHost
+import com.hello.android.ui.theme.HelloAndroidTheme
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("MainActivity onCreate - Environment: ${BuildConfig.ENV_NAME}")
-        Timber.d("API Base URL: ${BuildConfig.API_BASE_URL}")
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "HelloAndroid (${BuildConfig.ENV_NAME})"
-
-        binding.btnGreet.setOnClickListener {
-            val name = binding.etName.text.toString().trim()
-            if (name.isEmpty()) {
-                Timber.d("Name is empty, hiding greeting")
-                Toast.makeText(this, "请输入名字", Toast.LENGTH_SHORT).show()
-                binding.cardGreeting.visibility = View.GONE
-            } else {
-                Timber.d("Greeting user: %s", name)
-                binding.tvGreeting.text = "你好, $name!"
-                binding.cardGreeting.visibility = View.VISIBLE
+        setContent {
+            HelloAndroidTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    HelloNavHost()
+                }
             }
         }
     }
