@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android' version '1.9.22'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
     id 'com.google.dagger.hilt.android' version '2.50'
     id 'kotlin-kapt'
     id 'com.google.devtools.ksp' version '1.9.22-1.0.17'
@@ -79,6 +80,12 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -92,6 +99,8 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.material:material-icons-extended'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
@@ -121,17 +130,19 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.6.1'
     ksp 'androidx.room:room-compiler:2.6.1'
 
+    // Network
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0'
+
     // Testing
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testImplementation 'io.mockk:mockk:1.13.10'
     testImplementation 'app.cash.turbine:turbine:1.1.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-        }
-    }
 }
 
 kapt {

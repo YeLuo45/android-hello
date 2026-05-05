@@ -24,10 +24,6 @@ abstract class AppModule {
     @Singleton
     abstract fun bindLogger(impl: LoggerImpl): Logger
 
-    @Binds
-    @Singleton
-    abstract fun bindCounterRepository(impl: CounterRepository): CounterRepository
-
     companion object {
         @Provides
         @Singleton

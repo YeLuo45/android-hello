@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 Theme -->
-    <style name="Theme.AppCompat.Light" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Base application theme using Material3 with Material3 color attributes -->
+    <style name="Theme.AppCompat.Light" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -28,8 +28,8 @@
         <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
     </style>
 
-    <!-- Splash Theme with Material 3 -->
-    <style name="SplashTheme" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Splash Theme -->
+    <style name="SplashTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:windowBackground">@color/splash_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
