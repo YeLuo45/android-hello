@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.hello.android.BuildConfig
 import com.hello.android.databinding.ActivityMainBinding
 import timber.log.Timber
 
@@ -13,11 +14,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("MainActivity onCreate")
+        Timber.d("MainActivity onCreate - Environment: ${BuildConfig.ENV_NAME}")
+        Timber.d("API Base URL: ${BuildConfig.API_BASE_URL}")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "HelloAndroid (${BuildConfig.ENV_NAME})"
 
         binding.btnGreet.setOnClickListener {
             val name = binding.etName.text.toString().trim()
