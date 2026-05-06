@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home Screen -->
+    <string name="hello_world">你好，世界！</string>
+    <string name="load_posts">加载帖子</string>
+    <string name="go_to_counter_demo">跳到计数器</string>
+    <string name="environment">环境</string>
+
+    <!-- Counter Screen -->
+    <string name="counter_demo">计数器演示</string>
+    <string name="increment">+1</string>
+    <string name="reset">重置</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">设置</string>
+    <string name="appearance">外观</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="about">关于</string>
+    <string name="version">版本</string>
+    <string name="language">语言</string>
+    <string name="language_system">跟随系统</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_english">English</string>
+</resources>

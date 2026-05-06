@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hello.android.ui.i18n.AppLanguage
 import com.hello.android.ui.screens.CounterScreen
 import com.hello.android.ui.screens.HomeScreen
 import com.hello.android.ui.screens.SettingsScreen
@@ -31,13 +32,13 @@ import com.hello.android.ui.viewmodel.ThemeMode
 
 sealed class Screen(
     val route: String,
-    val title: String,
+    val titleResId: Int,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 ) {
-    object Home : Screen("home", "Home", Icons.Filled.Home, Icons.Outlined.Home)
-    object Counter : Screen("counter", "Counter", Icons.Filled.Add, Icons.Outlined.Add)
-    object Settings : Screen("settings", "Settings", Icons.Filled.Settings, Icons.Outlined.Settings)
+    object Home : Screen("home", 0, Icons.Filled.Home, Icons.Outlined.Home)
+    object Counter : Screen("counter", 0, Icons.Filled.Add, Icons.Outlined.Add)
+    object Settings : Screen("settings", 0, Icons.Filled.Settings, Icons.Outlined.Settings)
 }
 
 private val bottomNavItems = listOf(Screen.Home, Screen.Counter, Screen.Settings)
@@ -46,7 +47,9 @@ private val bottomNavItems = listOf(Screen.Home, Screen.Counter, Screen.Settings
 fun HelloNavHost(
     navController: NavHostController = rememberNavController(),
     currentTheme: ThemeMode = ThemeMode.SYSTEM,
-    onThemeChange: (ThemeMode) -> Unit = {}
+    onThemeChange: (ThemeMode) -> Unit = {},
+    currentLanguage: AppLanguage = AppLanguage.SYSTEM,
+    onLanguageChange: (AppLanguage) -> Unit = {}
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -60,10 +63,10 @@ fun HelloNavHost(
                         icon = {
                             Icon(
                                 imageVector = if (selected) screen.selectedIcon else screen.unselectedIcon,
-                                contentDescription = screen.title
+                                contentDescription = screen.route
                             )
                         },
-                        label = { Text(screen.title) },
+                        label = { Text(screen.route.replaceFirstChar { it.uppercase() }) },
                         selected = selected,
                         onClick = {
                             navController.navigate(screen.route) {
@@ -101,7 +104,9 @@ fun HelloNavHost(
             composable(Screen.Settings.route) {
                 SettingsScreen(
                     currentTheme = currentTheme,
-                    onThemeChange = onThemeChange
+                    onThemeChange = onThemeChange,
+                    currentLanguage = currentLanguage,
+                    onLanguageChange = onLanguageChange
                 )
             }
         }

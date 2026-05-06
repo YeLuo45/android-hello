@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">HelloAndroid</string>
+    <!-- Home Screen -->
+    <string name="hello_world">Hello World!</string>
+    <string name="load_posts">Load Posts</string>
+    <string name="go_to_counter_demo">Go to Counter Demo</string>
+    <string name="environment">Environment</string>
 
-    <string-array name="theme_entries">
-        <item>浅色</item>
-        <item>深色</item>
-        <item>跟随系统</item>
-    </string-array>
+    <!-- Counter Screen -->
+    <string name="counter_demo">Counter Demo</string>
+    <string name="increment">+1</string>
+    <string name="reset">Reset</string>
 
-    <string-array name="theme_values">
-        <item>light</item>
-        <item>dark</item>
-        <item>system</item>
-    </string-array>
+    <!-- Settings Screen -->
+    <string name="settings">Settings</string>
+    <string name="appearance">Appearance</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="language">Language</string>
+    <string name="language_system">Follow System</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_english">English</string>
 </resources>

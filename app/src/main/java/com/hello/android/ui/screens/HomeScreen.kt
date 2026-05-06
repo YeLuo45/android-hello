@@ -27,11 +27,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hello.android.BuildConfig
+import com.hello.android.R
 import com.hello.android.ui.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +54,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("HelloAndroid (${BuildConfig.ENV_NAME})") },
+                title = { Text("${stringResource(R.string.hello_world)} (${BuildConfig.ENV_NAME})") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -69,14 +71,14 @@ fun HomeScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Hello World!",
+                text = stringResource(R.string.hello_world),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Environment: ${BuildConfig.ENV_NAME}",
+                text = "${stringResource(R.string.environment)}: ${BuildConfig.ENV_NAME}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -93,7 +95,7 @@ fun HomeScreen(
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text("Load Posts")
+                        Text(stringResource(R.string.load_posts))
                     }
                 }
             } else {
@@ -136,7 +138,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onNavigateToCounter) {
-                Text("Go to Counter Demo")
+                Text(stringResource(R.string.go_to_counter_demo))
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

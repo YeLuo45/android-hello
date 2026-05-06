@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class UserPreferencesEntity(
     @PrimaryKey
     val id: Int = 1,
-    val themeMode: String = "SYSTEM"
+    val themeMode: String = "SYSTEM",
+    val language: String = "SYSTEM"
 )

@@ -21,4 +21,7 @@ interface UserPreferencesDao {
 
     @Query("UPDATE user_preferences SET themeMode = :themeMode WHERE id = 1")
     suspend fun updateThemeMode(themeMode: String)
+
+    @Query("UPDATE user_preferences SET language = :language WHERE id = 1")
+    suspend fun updateLanguage(language: String)
 }

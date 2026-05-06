@@ -26,10 +26,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.hello.android.R
 import com.hello.android.ui.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +45,7 @@ fun CounterScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Counter Demo") },
+                title = { Text(stringResource(R.string.counter_demo)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -68,7 +70,7 @@ fun CounterScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Counter",
+                text = stringResource(R.string.counter_demo),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -89,7 +91,7 @@ fun CounterScreen(
                     onClick = { viewModel.increment() },
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("+1")
+                    Text(stringResource(R.string.increment))
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 OutlinedButton(
@@ -99,7 +101,7 @@ fun CounterScreen(
                     ),
                     modifier = Modifier.width(120.dp)
                 ) {
-                    Text("Reset")
+                    Text(stringResource(R.string.reset))
                 }
             }
         }
