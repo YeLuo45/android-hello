@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.hello.android.data.CounterRepository
 import com.hello.android.domain.Logger
 import com.hello.android.domain.model.CounterModel
+import com.hello.android.notification.NotificationHelper
 import com.hello.android.widget.CounterWidgetReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -52,6 +53,15 @@ class MainViewModel @Inject constructor(
     fun increment() {
         viewModelScope.launch {
             counterRepository.increment()
+            checkCounterMilestone()
+        }
+    }
+
+    private fun checkCounterMilestone() {
+        val count = counterState.value.count
+        // Notify at 10, 100, 1000, 10000, etc.
+        if (count > 0 && count % 10 == 0) {
+            NotificationHelper.showCounterNotification(context, count)
         }
     }
 

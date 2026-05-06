@@ -1,6 +1,7 @@
 package com.hello.android
 
 import android.app.Application
+import com.hello.android.notification.NotificationHelper
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -11,5 +12,7 @@ class HelloApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+        // Create notification channel
+        NotificationHelper.createNotificationChannel(this)
     }
 }

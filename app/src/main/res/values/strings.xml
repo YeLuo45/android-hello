@@ -33,4 +33,8 @@
     <!-- Widget -->
     <string name="widget_name">Counter Widget</string>
     <string name="widget_description">Display and increment counter</string>
+
+    <!-- Notifications -->
+    <string name="notification_counter_title">Counter Milestone!</string>
+    <string name="notification_counter_text">Counter reached %1$d</string>
 </resources>

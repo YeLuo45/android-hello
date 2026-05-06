@@ -33,4 +33,8 @@
     <!-- Widget -->
     <string name="widget_name">计数器小组件</string>
     <string name="widget_description">显示和增加计数</string>
+
+    <!-- Notifications -->
+    <string name="notification_counter_title">计数器里程碑！</string>
+    <string name="notification_counter_text">计数器达到 %1$d</string>
 </resources>
