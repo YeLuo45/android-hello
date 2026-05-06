@@ -19,8 +19,18 @@
     <string name="theme_system">跟随系统</string>
     <string name="about">关于</string>
     <string name="version">版本</string>
-    <string name="language">语言</string>
+    <!-- Language -->
     <string name="language_system">跟随系统</string>
     <string name="language_chinese">中文</string>
     <string name="language_english">English</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_counter_short">计数器</string>
+    <string name="shortcut_counter_long">跳到计数器</string>
+    <string name="shortcut_refresh_short">刷新</string>
+    <string name="shortcut_refresh_long">刷新帖子</string>
+
+    <!-- Widget -->
+    <string name="widget_name">计数器小组件</string>
+    <string name="widget_description">显示和增加计数</string>
 </resources>

@@ -1,12 +1,15 @@
 package com.hello.android.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hello.android.data.CounterRepository
 import com.hello.android.domain.Logger
 import com.hello.android.domain.model.CounterModel
+import com.hello.android.widget.CounterWidgetReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +18,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val counterRepository: CounterRepository,
     private val logger: Logger,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val counterState: StateFlow<CounterModel> = counterRepository.counterState
@@ -26,6 +30,22 @@ class MainViewModel @Inject constructor(
             logger.log("MainViewModel restored from saved state")
         } ?: run {
             savedStateHandle[KEY_VIEW_MODEL_INIT] = "initialized"
+        }
+
+        // Sync with widget counter value on startup
+        syncWithWidgetCounter()
+    }
+
+    private fun syncWithWidgetCounter() {
+        viewModelScope.launch {
+            val widgetCounter = CounterWidgetReceiver.getCounterValue(context)
+            val currentCounter = counterState.value.count
+            // If widget counter is ahead, sync it
+            if (widgetCounter > currentCounter) {
+                repeat(widgetCounter - currentCounter) {
+                    counterRepository.increment()
+                }
+            }
         }
     }
 
