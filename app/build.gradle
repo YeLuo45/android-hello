@@ -33,6 +33,7 @@ android {
             versionNameSuffix "-dev"
             buildConfigField "String", "API_BASE_URL", '"https://dev-api.hello.com/"'
             buildConfigField "String", "ENV_NAME", '"dev"'
+            buildConfigField "String", "MIXPANEL_TOKEN", '"dev-token"'
         }
         staging {
             dimension "environment"
@@ -40,11 +41,13 @@ android {
             versionNameSuffix "-staging"
             buildConfigField "String", "API_BASE_URL", '"https://staging-api.hello.com/"'
             buildConfigField "String", "ENV_NAME", '"staging"'
+            buildConfigField "String", "MIXPANEL_TOKEN", '"staging-token"'
         }
         prod {
             dimension "environment"
             buildConfigField "String", "API_BASE_URL", '"https://api.hello.com/"'
             buildConfigField "String", "ENV_NAME", '"prod"'
+            buildConfigField "String", "MIXPANEL_TOKEN", '"prod-token"'
         }
     }
 
@@ -158,6 +161,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'io.mockk:mockk-android:1.13.10'
     androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.50'
+
+    // Analytics - Firebase Analytics (bundled, no external dependency needed)
+    // Firebase Analytics is included via Play Services Baseline Profile
 }
 
 kapt {

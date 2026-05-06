@@ -2,6 +2,7 @@ package com.hello.android.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hello.android.analytics.Analytics
 import com.hello.android.data.local.dao.UserPreferencesDao
 import com.hello.android.data.local.entity.UserPreferencesEntity
 import com.hello.android.ui.i18n.AppLanguage
@@ -18,7 +19,8 @@ enum class ThemeMode {
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val userPreferencesDao: UserPreferencesDao
+    private val userPreferencesDao: UserPreferencesDao,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val _themeMode = MutableStateFlow(ThemeMode.SYSTEM)
@@ -58,23 +60,27 @@ class SettingsViewModel @Inject constructor(
 
     fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch {
+            val previousTheme = _themeMode.value.name
             val current = userPreferencesDao.getPreferencesOnce()
             if (current != null) {
                 userPreferencesDao.updateThemeMode(mode.name)
             } else {
                 userPreferencesDao.insert(UserPreferencesEntity(themeMode = mode.name, language = _language.value.code))
             }
+            analytics.track("theme_changed", mapOf("previous_theme" to previousTheme, "new_theme" to mode.name))
         }
     }
 
     fun setLanguage(language: AppLanguage) {
         viewModelScope.launch {
+            val previousLanguage = _language.value.code
             val current = userPreferencesDao.getPreferencesOnce()
             if (current != null) {
                 userPreferencesDao.updateLanguage(language.code)
             } else {
                 userPreferencesDao.insert(UserPreferencesEntity(themeMode = _themeMode.value.name, language = language.code))
             }
+            analytics.track("language_changed", mapOf("previous_language" to previousLanguage, "new_language" to language.code))
         }
     }
 }

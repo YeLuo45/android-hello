@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hello.android.analytics.Analytics
 import com.hello.android.data.CounterRepository
 import com.hello.android.domain.Logger
 import com.hello.android.domain.model.CounterModel
@@ -20,6 +21,7 @@ class MainViewModel @Inject constructor(
     private val counterRepository: CounterRepository,
     private val logger: Logger,
     private val savedStateHandle: SavedStateHandle,
+    private val analytics: Analytics,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -54,6 +56,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             counterRepository.increment()
             checkCounterMilestone()
+            analytics.track("counter_increment", mapOf("count" to counterState.value.count))
         }
     }
 
@@ -67,7 +70,9 @@ class MainViewModel @Inject constructor(
 
     fun reset() {
         viewModelScope.launch {
+            val previousCount = counterState.value.count
             counterRepository.reset()
+            analytics.track("counter_reset", mapOf("previous_count" to previousCount))
         }
     }
 
