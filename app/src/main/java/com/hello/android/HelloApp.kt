@@ -1,12 +1,25 @@
 package com.hello.android
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.hello.android.notification.NotificationHelper
+import com.hello.android.worker.WorkScheduler
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltAndroidApp
-class HelloApp : Application() {
+class HelloApp : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
@@ -14,5 +27,7 @@ class HelloApp : Application() {
         }
         // Create notification channel
         NotificationHelper.createNotificationChannel(this)
+        // Schedule periodic post refresh
+        WorkScheduler.schedulePeriodicPostRefresh(this)
     }
 }
