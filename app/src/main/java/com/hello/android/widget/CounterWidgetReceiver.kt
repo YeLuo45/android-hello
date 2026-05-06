@@ -5,32 +5,29 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.widget.RemoteViews
 import com.hello.android.MainActivity
 import com.hello.android.R
+import com.hello.android.data.datastore.CounterDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class CounterWidgetReceiver : AppWidgetProvider() {
 
     companion object {
         const val ACTION_INCREMENT = "com.hello.android.ACTION_INCREMENT"
         const val EXTRA_WIDGET_ID = "widget_id"
-        private const val PREFS_NAME = "counter_widget_prefs"
-        private const val KEY_COUNTER = "counter_value"
 
-        fun getSharedPreferences(context: Context): SharedPreferences {
-            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        // Fallback SharedPreferences for widget (used before DataStore migration)
+        fun getSharedPreferences(context: Context): android.content.SharedPreferences {
+            return context.getSharedPreferences("counter_widget_prefs", Context.MODE_PRIVATE)
         }
 
-        fun getCounterValue(context: Context): Int {
-            return getSharedPreferences(context).getInt(KEY_COUNTER, 0)
-        }
-
-        fun incrementCounter(context: Context): Int {
-            val prefs = getSharedPreferences(context)
-            val newValue = prefs.getInt(KEY_COUNTER, 0) + 1
-            prefs.edit().putInt(KEY_COUNTER, newValue).apply()
-            return newValue
+        // Legacy counter value from SharedPreferences (for migration)
+        fun getLegacyCounterValue(context: Context): Int {
+            return getSharedPreferences(context).getInt("counter_value", 0)
         }
     }
 
@@ -39,8 +36,12 @@ class CounterWidgetReceiver : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+        val dataStore = CounterDataStore(context)
+        CoroutineScope(Dispatchers.IO).launch {
+            for (appWidgetId in appWidgetIds) {
+                val counter = dataStore.counterFlow.first()
+                updateAppWidget(context, appWidgetManager, appWidgetId, counter)
+            }
         }
     }
 
@@ -49,13 +50,12 @@ class CounterWidgetReceiver : AppWidgetProvider() {
         if (intent.action == ACTION_INCREMENT) {
             val widgetId = intent.getIntExtra(EXTRA_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                val newValue = incrementCounter(context)
-                val appWidgetManager = AppWidgetManager.getInstance(context)
-                updateAppWidget(context, appWidgetManager, widgetId)
-
-                // Also update MainViewModel via SharedPreferences for next app launch
-                val mainPrefs = context.getSharedPreferences("counter_prefs", Context.MODE_PRIVATE)
-                mainPrefs.edit().putInt("counter_value", newValue).apply()
+                val dataStore = CounterDataStore(context)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val newValue = dataStore.incrementCounter()
+                    val appWidgetManager = AppWidgetManager.getInstance(context)
+                    updateAppWidget(context, appWidgetManager, widgetId, newValue)
+                }
             }
         }
     }
@@ -63,10 +63,9 @@ class CounterWidgetReceiver : AppWidgetProvider() {
     private fun updateAppWidget(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
+        appWidgetId: Int,
+        counterValue: Int
     ) {
-        val counterValue = getCounterValue(context)
-
         // Intent to open app
         val openAppIntent = Intent(context, MainActivity::class.java)
         val openAppPendingIntent = PendingIntent.getActivity(

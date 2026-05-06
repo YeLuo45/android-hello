@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.hello.android.data.CounterRepository
 import com.hello.android.data.LoggerImpl
+import com.hello.android.data.datastore.CounterDataStore
 import com.hello.android.data.local.AppDatabase
 import com.hello.android.data.local.dao.CounterDao
 import com.hello.android.data.local.dao.UserPreferencesDao
@@ -43,6 +44,12 @@ abstract class AppModule {
         @Provides
         fun provideUserPreferencesDao(database: AppDatabase): UserPreferencesDao {
             return database.userPreferencesDao()
+        }
+
+        @Provides
+        @Singleton
+        fun provideCounterDataStore(@ApplicationContext context: Context): CounterDataStore {
+            return CounterDataStore(context)
         }
     }
 }

@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hello.android.analytics.Analytics
 import com.hello.android.data.CounterRepository
+import com.hello.android.data.datastore.CounterDataStore
 import com.hello.android.domain.Logger
 import com.hello.android.domain.model.CounterModel
 import com.hello.android.notification.NotificationHelper
-import com.hello.android.widget.CounterWidgetReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +23,7 @@ class MainViewModel @Inject constructor(
     private val logger: Logger,
     private val savedStateHandle: SavedStateHandle,
     private val analytics: Analytics,
+    private val counterDataStore: CounterDataStore,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -41,7 +43,8 @@ class MainViewModel @Inject constructor(
 
     private fun syncWithWidgetCounter() {
         viewModelScope.launch {
-            val widgetCounter = CounterWidgetReceiver.getCounterValue(context)
+            // Get widget counter from DataStore
+            val widgetCounter = counterDataStore.counterFlow.first()
             val currentCounter = counterState.value.count
             // If widget counter is ahead, sync it
             if (widgetCounter > currentCounter) {
