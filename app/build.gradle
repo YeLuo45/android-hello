@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
+    id 'org.jetbrains.kotlin.plugin.parcelize' version '1.9.22'
     id 'com.google.dagger.hilt.android' version '2.50'
     id 'kotlin-kapt'
     id 'com.google.devtools.ksp' version '1.9.22-1.0.17'
@@ -112,6 +113,7 @@ dependencies {
     // ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0'
 
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.50'
