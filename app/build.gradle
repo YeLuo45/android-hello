@@ -16,8 +16,8 @@ android {
         applicationId "com.hello.android"
         minSdk 24
         targetSdk 34
-        versionCode 3
-        versionName "2.3.0"
+        versionCode 11
+        versionName "2.9.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -51,6 +51,12 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            // Note: Using debug signing for demo purposes. For production, use a proper release keystore.
+            // To configure proper release signing:
+            // 1. Create keystore.properties (DO NOT commit this file)
+            // 2. Add to local.properties: keystore=/path/to/release.keystore
+            // 3. Uncomment and configure signingConfigs below
+            // signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {

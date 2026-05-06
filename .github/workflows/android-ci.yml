@@ -76,3 +76,48 @@ jobs:
           name: prod-release-apk
           path: app/build/outputs/apk/prod/release/*.apk
           retention-days: 7
+
+  release:
+    needs: [build, build-release]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    timeout-minutes: 30
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: apks
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            apks/dev-debug-apk/*.apk
+            apks/prod-release-apk/*.apk
+          draft: false
+          prerelease: false
+          body: |
+            ## android-hello V2.9.0
+
+            ### Features
+            - MVVM + Compose + Hilt
+            - Room Database 持久化
+            - Retrofit 网络层 (JSONPlaceholder)
+            - SavedStateHandle
+            - 深色模式 (Material3)
+            - Compose UI 测试
+            - 国际化 (中/英)
+            - CI/CD 流水线
+
+            ### Build Variants
+            - **dev-debug**: 开发环境调试版
+            - **prod-release**: 生产环境发布版
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
