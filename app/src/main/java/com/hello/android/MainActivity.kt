@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hello.android.ui.components.HelloNavHost
 import com.hello.android.ui.i18n.AppLanguage
@@ -23,12 +24,9 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    override fun attachBaseContext(newBase: Context) {
-        // Language is handled via recomposition, not attachBaseContext
-        super.attachBaseContext(newBase)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Install SplashScreen before super.onCreate()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         Timber.d("MainActivity onCreate - Environment: ${BuildConfig.ENV_NAME}")
 
