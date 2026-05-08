@@ -5,17 +5,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  push:
-    tags:
-      - 'v*'
 
 env:
   JAVA_VERSION: '17'
-  GRADLE_VERSION: '8.2'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -26,27 +23,24 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Run unit tests
+        run: ./gradlew testDevDebugUnitTest --no-daemon
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-dev-debug
+          path: app/build/reports/tests/testDevDebugUnitTest/
+          retention-days: 7
+
       - name: Build dev debug APK
-        run: ./gradlew assembleDevDebug
+        run: ./gradlew assembleDevDebug --no-daemon
 
       - name: Upload dev debug artifact
         uses: actions/upload-artifact@v4
@@ -55,18 +49,26 @@ jobs:
           path: app/build/outputs/apk/dev/debug/*.apk
           retention-days: 7
 
-      - name: Build staging debug APK
-        run: ./gradlew assembleStagingDebug
+  build-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
-      - name: Upload staging debug artifact
-        uses: actions/upload-artifact@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
         with:
-          name: staging-debug-apk
-          path: app/build/outputs/apk/staging/debug/*.apk
-          retention-days: 7
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Build prod release APK
-        run: ./gradlew assembleProdRelease
+        run: ./gradlew assembleProdRelease --no-daemon
 
       - name: Upload prod release artifact
         uses: actions/upload-artifact@v4
@@ -76,9 +78,11 @@ jobs:
           retention-days: 7
 
   release:
-    needs: build
+    needs: [build, build-release]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+    timeout-minutes: 30
+
     permissions:
       contents: write
 
@@ -92,10 +96,28 @@ jobs:
           path: apks
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: apks/**/*.apk
+          files: |
+            apks/dev-debug-apk/*.apk
+            apks/prod-release-apk/*.apk
           draft: false
           prerelease: false
+          body: |
+            ## android-hello V2.9.0
+
+            ### Features
+            - MVVM + Compose + Hilt
+            - Room Database 持久化
+            - Retrofit 网络层 (JSONPlaceholder)
+            - SavedStateHandle
+            - 深色模式 (Material3)
+            - Compose UI 测试
+            - 国际化 (中/英)
+            - CI/CD 流水线
+
+            ### Build Variants
+            - **dev-debug**: 开发环境调试版
+            - **prod-release**: 生产环境发布版
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

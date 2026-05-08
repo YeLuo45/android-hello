@@ -1,6 +1,5 @@
 package com.hello.android.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,345 +8,221 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.hello.android.BuildConfig
-import com.hello.android.data.preferences.AppLanguage
-import com.hello.android.data.preferences.ThemeMode
-import com.hello.android.ui.viewmodel.AuthViewModel
-import com.hello.android.ui.viewmodel.SettingsViewModel
+import com.hello.android.R
+import com.hello.android.ui.i18n.AppLanguage
+import com.hello.android.ui.viewmodel.ThemeMode
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onLogout: () -> Unit,
-    settingsViewModel: SettingsViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    currentTheme: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit,
+    currentLanguage: AppLanguage = AppLanguage.SYSTEM,
+    onLanguageChange: (AppLanguage) -> Unit = {}
 ) {
-    val settingsState by settingsViewModel.uiState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.settings),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
 
-    var showThemeDialog by remember { mutableStateOf(false) }
-    var showLanguageDialog by remember { mutableStateOf(false) }
-    var showLogoutDialog by remember { mutableStateOf(false) }
-    var showAboutDialog by remember { mutableStateOf(false) }
+        Spacer(modifier = Modifier.height(24.dp))
 
-    LaunchedEffect(settingsState.cacheCleared) {
-        if (settingsState.cacheCleared) {
-            snackbarHostState.showSnackbar("缓存已清理")
-            settingsViewModel.resetCacheCleared()
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("设置") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+        // Appearance Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
         ) {
-            // Appearance Section
-            SectionHeader(title = "外观")
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.appearance),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
 
-            SettingsItem(
-                icon = Icons.Default.DarkMode,
-                title = "深色模式",
-                subtitle = when (settingsState.preferences.themeMode) {
-                    ThemeMode.SYSTEM -> "跟随系统"
-                    ThemeMode.LIGHT -> "浅色模式"
-                    ThemeMode.DARK -> "深色模式"
-                },
-                onClick = { showThemeDialog = true }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Column(modifier = Modifier.selectableGroup()) {
+                    ThemeOption(
+                        label = stringResource(R.string.theme_light),
+                        selected = currentTheme == ThemeMode.LIGHT,
+                        onClick = { onThemeChange(ThemeMode.LIGHT) }
+                    )
+                    ThemeOption(
+                        label = stringResource(R.string.theme_dark),
+                        selected = currentTheme == ThemeMode.DARK,
+                        onClick = { onThemeChange(ThemeMode.DARK) }
+                    )
+                    ThemeOption(
+                        label = stringResource(R.string.theme_system),
+                        selected = currentTheme == ThemeMode.SYSTEM,
+                        onClick = { onThemeChange(ThemeMode.SYSTEM) }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Language Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.language),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
 
-            SettingsItem(
-                icon = Icons.Default.Language,
-                title = "语言",
-                subtitle = settingsState.preferences.language.displayName,
-                onClick = { showLanguageDialog = true }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Column(modifier = Modifier.selectableGroup()) {
+                    LanguageOption(
+                        label = stringResource(R.string.language_system),
+                        selected = currentLanguage == AppLanguage.SYSTEM,
+                        onClick = { onLanguageChange(AppLanguage.SYSTEM) }
+                    )
+                    LanguageOption(
+                        label = stringResource(R.string.language_chinese),
+                        selected = currentLanguage == AppLanguage.CHINESE,
+                        onClick = { onLanguageChange(AppLanguage.CHINESE) }
+                    )
+                    LanguageOption(
+                        label = stringResource(R.string.language_english),
+                        selected = currentLanguage == AppLanguage.ENGLISH,
+                        onClick = { onLanguageChange(AppLanguage.ENGLISH) }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // About Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.about),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            // Data Section
-            SectionHeader(title = "数据")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(stringResource(R.string.environment), style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        BuildConfig.ENV_NAME,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
 
-            SettingsItem(
-                icon = Icons.Default.Delete,
-                title = "清理缓存",
-                subtitle = "清除应用缓存数据",
-                onClick = { settingsViewModel.clearCache() },
-                showLoading = settingsState.isLoading
-            )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-            // Account Section
-            SectionHeader(title = "账号")
-
-            SettingsItem(
-                icon = Icons.AutoMirrored.Filled.Logout,
-                title = "退出登录",
-                subtitle = "退出当前账号",
-                onClick = { showLogoutDialog = true }
-            )
-
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-            // About Section
-            SectionHeader(title = "关于")
-
-            SettingsItem(
-                icon = Icons.Default.Info,
-                title = "关于应用",
-                subtitle = "版本 ${BuildConfig.VERSION_NAME}",
-                onClick = { showAboutDialog = true }
-            )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(stringResource(R.string.version), style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        BuildConfig.VERSION_NAME,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
     }
-
-    // Theme Mode Dialog
-    if (showThemeDialog) {
-        AlertDialog(
-            onDismissRequest = { showThemeDialog = false },
-            title = { Text("选择深色模式") },
-            text = {
-                Column {
-                    ThemeMode.entries.forEach { mode ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    settingsViewModel.setThemeMode(mode)
-                                    showThemeDialog = false
-                                }
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = settingsState.preferences.themeMode == mode,
-                                onClick = {
-                                    settingsViewModel.setThemeMode(mode)
-                                    showThemeDialog = false
-                                }
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = when (mode) {
-                                    ThemeMode.SYSTEM -> "跟随系统"
-                                    ThemeMode.LIGHT -> "浅色模式"
-                                    ThemeMode.DARK -> "深色模式"
-                                }
-                            )
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showThemeDialog = false }) {
-                    Text("取消")
-                }
-            }
-        )
-    }
-
-    // Language Dialog
-    if (showLanguageDialog) {
-        AlertDialog(
-            onDismissRequest = { showLanguageDialog = false },
-            title = { Text("选择语言") },
-            text = {
-                Column {
-                    AppLanguage.entries.forEach { language ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    settingsViewModel.setLanguage(language)
-                                    showLanguageDialog = false
-                                }
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = settingsState.preferences.language == language,
-                                onClick = {
-                                    settingsViewModel.setLanguage(language)
-                                    showLanguageDialog = false
-                                }
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = language.displayName)
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showLanguageDialog = false }) {
-                    Text("取消")
-                }
-            }
-        )
-    }
-
-    // Logout Dialog
-    if (showLogoutDialog) {
-        AlertDialog(
-            onDismissRequest = { showLogoutDialog = false },
-            title = { Text("退出登录") },
-            text = { Text("确定要退出当前账号吗？") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showLogoutDialog = false
-                        authViewModel.logout()
-                        onLogout()
-                    }
-                ) {
-                    Text("确定", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("取消")
-                }
-            }
-        )
-    }
-
-    // About Dialog
-    if (showAboutDialog) {
-        AlertDialog(
-            onDismissRequest = { showAboutDialog = false },
-            title = { Text("关于应用") },
-            text = {
-                Column {
-                    Text("HelloAndroid")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("版本: ${BuildConfig.VERSION_NAME}")
-                    Text("环境: ${BuildConfig.ENV_NAME}")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("这是一个基于 Jetpack Compose 的示例应用，展示了 MVVM 架构、Hilt 依赖注入和 Material 3 设计。")
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showAboutDialog = false }) {
-                    Text("确定")
-                }
-            }
-        )
-    }
 }
 
 @Composable
-private fun SectionHeader(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-    )
-}
-
-@Composable
-private fun SettingsItem(
-    icon: ImageVector,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit,
-    showLoading: Boolean = false
+private fun ThemeOption(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .clickable(enabled = !showLoading, onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                role = Role.RadioButton
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            if (showLoading) {
-                CircularProgressIndicator(modifier = Modifier.height(24.dp))
-            } else {
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = null
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+}
+
+@Composable
+private fun LanguageOption(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                role = Role.RadioButton
+            )
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = null
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 8.dp)
+        )
     }
 }

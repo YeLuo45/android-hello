@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home Screen -->
+    <string name="hello_world">你好，世界！</string>
+    <string name="load_posts">加载帖子</string>
+    <string name="go_to_counter_demo">跳到计数器</string>
+    <string name="environment">环境</string>
+
+    <!-- Counter Screen -->
+    <string name="counter_demo">计数器演示</string>
+    <string name="increment">+1</string>
+    <string name="reset">重置</string>
+
+    <!-- Settings Screen -->
+    <string name="settings">设置</string>
+    <string name="appearance">外观</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="about">关于</string>
+    <string name="version">版本</string>
+    <!-- Language -->
+    <string name="language_system">跟随系统</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_english">English</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_counter_short">计数器</string>
+    <string name="shortcut_counter_long">跳到计数器</string>
+    <string name="shortcut_refresh_short">刷新</string>
+    <string name="shortcut_refresh_long">刷新帖子</string>
+
+    <!-- Widget -->
+    <string name="widget_name">计数器小组件</string>
+    <string name="widget_description">显示和增加计数</string>
+
+    <!-- Notifications -->
+    <string name="notification_counter_title">计数器里程碑！</string>
+    <string name="notification_counter_text">计数器达到 %1$d</string>
+</resources>

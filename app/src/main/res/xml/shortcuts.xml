@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="counter"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_counter"
+        android:shortcutShortLabel="@string/shortcut_counter_short"
+        android:shortcutLongLabel="@string/shortcut_counter_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.hello.android"
+            android:targetClass="com.hello.android.MainActivity"
+            android:data="counter" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="refresh"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_refresh"
+        android:shortcutShortLabel="@string/shortcut_refresh_short"
+        android:shortcutLongLabel="@string/shortcut_refresh_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.hello.android"
+            android:targetClass="com.hello.android.MainActivity"
+            android:data="refresh" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
