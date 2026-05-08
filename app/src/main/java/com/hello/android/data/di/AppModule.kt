@@ -1,6 +1,5 @@
 package com.hello.android.data.di
 
-import com.hello.android.data.CounterRepository
 import com.hello.android.data.LoggerImpl
 import com.hello.android.domain.Logger
 import dagger.Binds
@@ -16,8 +15,4 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun bindLogger(impl: LoggerImpl): Logger
-
-    @Binds
-    @Singleton
-    abstract fun bindCounterRepository(impl: CounterRepository): CounterRepository
 }
