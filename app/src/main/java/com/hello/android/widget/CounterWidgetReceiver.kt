@@ -19,16 +19,6 @@ class CounterWidgetReceiver : AppWidgetProvider() {
     companion object {
         const val ACTION_INCREMENT = "com.hello.android.ACTION_INCREMENT"
         const val EXTRA_WIDGET_ID = "widget_id"
-
-        // Fallback SharedPreferences for widget (used before DataStore migration)
-        fun getSharedPreferences(context: Context): android.content.SharedPreferences {
-            return context.getSharedPreferences("counter_widget_prefs", Context.MODE_PRIVATE)
-        }
-
-        // Legacy counter value from SharedPreferences (for migration)
-        fun getLegacyCounterValue(context: Context): Int {
-            return getSharedPreferences(context).getInt("counter_value", 0)
-        }
     }
 
     override fun onUpdate(

@@ -2,7 +2,6 @@ package com.hello.android.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
 import com.hello.android.data.local.dao.CounterDao
 import com.hello.android.data.local.dao.PostDao
 import com.hello.android.data.local.dao.UserPreferencesDao
@@ -21,6 +20,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun postDao(): PostDao
 
     companion object {
-        val MIGRATION_1_2: Migration = migration_1_2
+        const val MIGRATION_1_2_VERSION = 2
     }
 }

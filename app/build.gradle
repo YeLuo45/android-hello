@@ -6,7 +6,6 @@ plugins {
     id 'com.google.dagger.hilt.android' version '2.50'
     id 'kotlin-kapt'
     id 'com.google.devtools.ksp' version '1.9.22-1.0.17'
-    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -177,15 +176,8 @@ dependencies {
 
     // Splash Screen
     implementation 'androidx.core:core-splashscreen:1.0.1'
-
-    // Firebase Crashlytics
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 }
 
 kapt {
     correctErrorTypes true
 }
-
-// Firebase Crashlytics - google-services.json must be present
-// The json file is stored as a base64 encoded secret and decoded during CI build
-apply plugin: 'com.google.gms.google-services'

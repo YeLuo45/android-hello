@@ -1,6 +1,7 @@
-package com.hello.android.analytics
+package com.hello.android.data.di
 
 import android.content.Context
+import com.hello.android.data.datastore.CounterDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,11 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AnalyticsModule {
+object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideAnalytics(@ApplicationContext context: Context): Analytics {
-        return LocalAnalytics(context)
+    fun provideCounterDataStore(@ApplicationContext context: Context): CounterDataStore {
+        return CounterDataStore(context)
     }
 }

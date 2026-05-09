@@ -4,10 +4,10 @@ package com.hello.android.ui.theme
  * Theme mode options for the app.
  * Unifies theme mode selection across the app.
  */
-enum class ThemeMode {
-    LIGHT,
-    DARK,
-    SYSTEM;
+enum class ThemeMode(val value: Int) {
+    LIGHT(0),
+    DARK(1),
+    SYSTEM(2);
 
     companion object {
         fun fromValue(value: Int): ThemeMode = when (value) {
@@ -16,11 +16,5 @@ enum class ThemeMode {
             2 -> SYSTEM
             else -> SYSTEM
         }
-    }
-
-    val value: Int = when (this) {
-        LIGHT -> 0
-        DARK -> 1
-        SYSTEM -> 2
     }
 }

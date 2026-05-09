@@ -43,7 +43,7 @@ class PostRepository @Inject constructor(
         logger.log("Post cache cleared")
     }
 
-    fun isCacheValid(maxAgeMillis: Long = CACHE_MAX_AGE_MILLIS): Boolean {
+    suspend fun isCacheValid(maxAgeMillis: Long = CACHE_MAX_AGE_MILLIS): Boolean {
         val cachedPosts = postDao.getAllPostsOnce()
         if (cachedPosts.isEmpty()) return false
         val oldestCacheTime = cachedPosts.minOfOrNull { it.cachedAt } ?: return false
