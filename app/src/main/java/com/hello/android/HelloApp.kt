@@ -3,6 +3,8 @@ package com.hello.android
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import coil.ImageLoader
+import coil.ImageLoaderFactory
 import com.hello.android.notification.NotificationHelper
 import com.hello.android.worker.WorkScheduler
 import dagger.hilt.android.HiltAndroidApp
@@ -10,10 +12,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class HelloApp : Application(), Configuration.Provider {
+class HelloApp : Application(), Configuration.Provider, ImageLoaderFactory {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
@@ -30,4 +35,6 @@ class HelloApp : Application(), Configuration.Provider {
         // Schedule periodic post refresh
         WorkScheduler.schedulePeriodicPostRefresh(this)
     }
+
+    override fun newImageLoader(): ImageLoader = imageLoader
 }
