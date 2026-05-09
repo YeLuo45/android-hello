@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import com.hello.android.data.CounterRepository
 import com.hello.android.data.LoggerImpl
+import com.hello.android.data.PostRepository
 import com.hello.android.data.datastore.CounterDataStore
 import com.hello.android.data.local.AppDatabase
 import com.hello.android.data.local.dao.CounterDao
+import com.hello.android.data.local.dao.PostDao
 import com.hello.android.data.local.dao.UserPreferencesDao
 import com.hello.android.domain.Logger
 import dagger.Binds
@@ -33,7 +35,9 @@ abstract class AppModule {
                 context,
                 AppDatabase::class.java,
                 "hello_database"
-            ).build()
+            )
+                .addMigrations(AppDatabase.MIGRATION_1_2)
+                .build()
         }
 
         @Provides
@@ -44,6 +48,11 @@ abstract class AppModule {
         @Provides
         fun provideUserPreferencesDao(database: AppDatabase): UserPreferencesDao {
             return database.userPreferencesDao()
+        }
+
+        @Provides
+        fun providePostDao(database: AppDatabase): PostDao {
+            return database.postDao()
         }
 
         @Provides
