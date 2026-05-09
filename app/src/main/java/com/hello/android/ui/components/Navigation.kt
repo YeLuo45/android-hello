@@ -28,7 +28,7 @@ import com.hello.android.ui.i18n.AppLanguage
 import com.hello.android.ui.screens.CounterScreen
 import com.hello.android.ui.screens.HomeScreen
 import com.hello.android.ui.screens.SettingsScreen
-import com.hello.android.ui.viewmodel.ThemeMode
+import com.hello.android.ui.theme.ThemeMode
 
 sealed class Screen(
     val route: String,
@@ -48,6 +48,8 @@ fun HelloNavHost(
     navController: NavHostController = rememberNavController(),
     currentTheme: ThemeMode = ThemeMode.SYSTEM,
     onThemeChange: (ThemeMode) -> Unit = {},
+    currentDynamicColor: Boolean = true,
+    onDynamicColorChange: (Boolean) -> Unit = {},
     currentLanguage: AppLanguage = AppLanguage.SYSTEM,
     onLanguageChange: (AppLanguage) -> Unit = {}
 ) {
@@ -105,6 +107,8 @@ fun HelloNavHost(
                 SettingsScreen(
                     currentTheme = currentTheme,
                     onThemeChange = onThemeChange,
+                    currentDynamicColor = currentDynamicColor,
+                    onDynamicColorChange = onDynamicColorChange,
                     currentLanguage = currentLanguage,
                     onLanguageChange = onLanguageChange
                 )

@@ -2,6 +2,7 @@ package com.hello.android.data.preferences
 
 import com.hello.android.data.local.dao.UserPreferencesDao
 import com.hello.android.data.local.entity.UserPreferencesEntity
+import com.hello.android.ui.theme.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -14,7 +15,8 @@ class UserPreferencesRepository @Inject constructor(
     val userPreferences: Flow<UserPreferences> = userPreferencesDao.getPreferences().map { prefs ->
         prefs?.let {
             UserPreferences(
-                themeMode = ThemeMode.fromValue(it.themeMode.toIntOrNull() ?: 0),
+                themeMode = ThemeMode.fromValue(it.themeMode.toIntOrNull() ?: 2),
+                dynamicColorEnabled = it.dynamicColorEnabled.toBoolean(),
                 language = AppLanguage.fromCode(it.language)
             )
         } ?: UserPreferences()
@@ -22,6 +24,10 @@ class UserPreferencesRepository @Inject constructor(
 
     val themeMode: Flow<ThemeMode> = userPreferencesDao.getPreferences().map { prefs ->
         prefs?.themeMode?.toIntOrNull()?.let { ThemeMode.fromValue(it) } ?: ThemeMode.SYSTEM
+    }
+
+    val dynamicColorEnabled: Flow<Boolean> = userPreferencesDao.getPreferences().map { prefs ->
+        prefs?.dynamicColorEnabled?.toBoolean() ?: true
     }
 
     val language: Flow<AppLanguage> = userPreferencesDao.getPreferences().map { prefs ->
@@ -35,6 +41,20 @@ class UserPreferencesRepository @Inject constructor(
         } else {
             userPreferencesDao.insert(UserPreferencesEntity(
                 themeMode = themeMode.value.toString(),
+                dynamicColorEnabled = "true",
+                language = AppLanguage.SYSTEM.code
+            ))
+        }
+    }
+
+    suspend fun setDynamicColorEnabled(enabled: Boolean) {
+        val current = userPreferencesDao.getPreferencesOnce()
+        if (current != null) {
+            userPreferencesDao.updateDynamicColorEnabled(enabled.toString())
+        } else {
+            userPreferencesDao.insert(UserPreferencesEntity(
+                themeMode = ThemeMode.SYSTEM.value.toString(),
+                dynamicColorEnabled = enabled.toString(),
                 language = AppLanguage.SYSTEM.code
             ))
         }
@@ -47,6 +67,7 @@ class UserPreferencesRepository @Inject constructor(
         } else {
             userPreferencesDao.insert(UserPreferencesEntity(
                 themeMode = ThemeMode.SYSTEM.value.toString(),
+                dynamicColorEnabled = "true",
                 language = language.code
             ))
         }
@@ -60,3 +81,9 @@ class UserPreferencesRepository @Inject constructor(
         userPreferencesDao.insert(UserPreferencesEntity())
     }
 }
+
+data class UserPreferences(
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val dynamicColorEnabled: Boolean = true,
+    val language: AppLanguage = AppLanguage.SYSTEM
+)

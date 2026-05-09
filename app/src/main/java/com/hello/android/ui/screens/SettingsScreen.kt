@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,12 +26,14 @@ import androidx.compose.ui.unit.dp
 import com.hello.android.BuildConfig
 import com.hello.android.R
 import com.hello.android.ui.i18n.AppLanguage
-import com.hello.android.ui.viewmodel.ThemeMode
+import com.hello.android.ui.theme.ThemeMode
 
 @Composable
 fun SettingsScreen(
     currentTheme: ThemeMode,
     onThemeChange: (ThemeMode) -> Unit,
+    currentDynamicColor: Boolean = true,
+    onDynamicColorChange: (Boolean) -> Unit = {},
     currentLanguage: AppLanguage = AppLanguage.SYSTEM,
     onLanguageChange: (AppLanguage) -> Unit = {}
 ) {
@@ -63,6 +66,15 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // Dynamic Color Toggle
+                DynamicColorToggle(
+                    enabled = currentDynamicColor,
+                    onEnabledChange = onDynamicColorChange
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Theme Mode Selection
                 Column(modifier = Modifier.selectableGroup()) {
                     ThemeOption(
                         label = stringResource(R.string.theme_light),
@@ -166,6 +178,34 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun DynamicColorToggle(
+    enabled: Boolean,
+    onEnabledChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = enabled,
+                onClick = { onEnabledChange(!enabled) },
+                role = Role.Switch
+            )
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.dynamic_color),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Switch(
+            checked = enabled,
+            onCheckedChange = onEnabledChange
+        )
     }
 }
 

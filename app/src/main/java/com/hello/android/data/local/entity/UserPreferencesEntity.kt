@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class UserPreferencesEntity(
     @PrimaryKey
     val id: Int = 1,
-    val themeMode: String = "SYSTEM",
+    val themeMode: String = "2",
+    val dynamicColorEnabled: String = "true",
     val language: String = "SYSTEM"
 )

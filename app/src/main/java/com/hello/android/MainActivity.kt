@@ -17,7 +17,7 @@ import com.hello.android.ui.i18n.AppLanguage
 import com.hello.android.ui.i18n.LocaleHelper
 import com.hello.android.ui.theme.HelloAndroidTheme
 import com.hello.android.ui.viewmodel.SettingsViewModel
-import com.hello.android.ui.viewmodel.ThemeMode
+import com.hello.android.ui.theme.ThemeMode
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val settingsViewModel: SettingsViewModel = viewModel()
             val themeMode by settingsViewModel.themeMode.collectAsState()
+            val dynamicColorEnabled by settingsViewModel.dynamicColorEnabled.collectAsState()
             val language by settingsViewModel.language.collectAsState()
 
             val isDarkTheme = when (themeMode) {
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 this
             }
 
-            HelloAndroidTheme(darkTheme = isDarkTheme) {
+            HelloAndroidTheme(darkTheme = isDarkTheme, dynamicColor = dynamicColorEnabled) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -56,6 +57,8 @@ class MainActivity : ComponentActivity() {
                     HelloNavHost(
                         currentTheme = themeMode,
                         onThemeChange = { settingsViewModel.setThemeMode(it) },
+                        currentDynamicColor = dynamicColorEnabled,
+                        onDynamicColorChange = { settingsViewModel.setDynamicColorEnabled(it) },
                         currentLanguage = language,
                         onLanguageChange = { settingsViewModel.setLanguage(it) }
                     )
