@@ -37,4 +37,8 @@
     <!-- Notifications -->
     <string name="notification_counter_title">计数器里程碑！</string>
     <string name="notification_counter_text">计数器达到 %1$d</string>
+    <string name="notification_new_posts_title">新内容可用！</string>
+    <string name="notification_new_posts_text">发现 %1$d 篇新帖子</string>
+    <string name="notification_posts_refresh_title">帖子已刷新</string>
+    <string name="notification_posts_refresh_text">帖子已更新</string>
 </resources>

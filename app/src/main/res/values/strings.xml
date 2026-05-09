@@ -23,6 +23,7 @@
     <string name="language_system">Follow System</string>
     <string name="language_chinese">中文</string>
     <string name="language_english">English</string>
+    <string name="dynamic_color">Dynamic Color (Material You)</string>
 
     <!-- Shortcuts -->
     <string name="shortcut_counter_short">Counter</string>
@@ -37,4 +38,8 @@
     <!-- Notifications -->
     <string name="notification_counter_title">Counter Milestone!</string>
     <string name="notification_counter_text">Counter reached %1$d</string>
+    <string name="notification_new_posts_title">New Content Available!</string>
+    <string name="notification_new_posts_text">%1$d new posts discovered</string>
+    <string name="notification_posts_refresh_title">Posts Refreshed</string>
+    <string name="notification_posts_refresh_text">Posts have been updated</string>
 </resources>

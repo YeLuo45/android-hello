@@ -43,6 +43,18 @@ class PostRepository @Inject constructor(
         logger.log("Post cache cleared")
     }
 
+    fun isCacheValid(maxAgeMillis: Long = CACHE_MAX_AGE_MILLIS): Boolean {
+        val cachedPosts = postDao.getAllPostsOnce()
+        if (cachedPosts.isEmpty()) return false
+        val oldestCacheTime = cachedPosts.minOfOrNull { it.cachedAt } ?: return false
+        return System.currentTimeMillis() - oldestCacheTime < maxAgeMillis
+    }
+
+    companion object {
+        // Cache is considered valid for 15 minutes
+        const val CACHE_MAX_AGE_MILLIS = 15 * 60 * 1000L
+    }
+
     private fun PostEntity.toPost(): Post = Post(
         id = id,
         userId = userId,
